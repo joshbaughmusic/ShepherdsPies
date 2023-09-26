@@ -112,6 +112,7 @@ export const OrderDetails = () => {
                   <tr>
                     <th>Size</th>
                     <th>Topping #</th>
+                    <th>Price</th>
                     <th></th>
                     <th></th>
                   </tr>
@@ -123,6 +124,7 @@ export const OrderDetails = () => {
                         <tr>
                           <td>{p.size.name}</td>
                           <td>{p.pizzaToppings.length}</td>
+                          <td>{`$${p.totalCost}`}</td>
                           <td>
                             <Button
                               color="primary"
@@ -156,9 +158,18 @@ export const OrderDetails = () => {
               )}
             </div>
             <div className="container price-container">
-              <h5>Tip:</h5>
+              <h6>Tip:</h6>
               {order.tip ? <p>{`$${order.tip}`}</p> : <p>$0</p>}
-              <h5>Total:</h5>
+              {
+                order.delivery ? 
+                <>
+                <h6>Delivery Fee</h6>
+                <p>$5</p>
+                </>
+                :
+                ''
+              }
+              <h4>Total:</h4>
               <p>{`$${order.totalCost}`}</p>
             </div>
           </div>
