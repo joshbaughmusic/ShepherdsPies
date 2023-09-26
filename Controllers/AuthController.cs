@@ -97,7 +97,7 @@ public class AuthController : ControllerBase
     public IActionResult Me()
     {
         var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var profile = _dbContext.UserProfiles.SingleOrDefault(up => up.IdentityUserId == identityUserId);
+        var profile = _dbContext.Employees.SingleOrDefault(up => up.IdentityUserId == identityUserId);
         var roles = User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
         if (profile != null)
         {
@@ -125,7 +125,7 @@ public class AuthController : ControllerBase
         var result = await _userManager.CreateAsync(user, password);
         if (result.Succeeded)
         {
-            _dbContext.UserProfiles.Add(new UserProfile
+            _dbContext.Employees.Add(new Employee
             {
                 FirstName = registration.FirstName,
                 LastName = registration.LastName,

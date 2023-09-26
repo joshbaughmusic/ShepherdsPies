@@ -9,11 +9,11 @@ namespace ShepherdsPies.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserProfileController : ControllerBase
+public class EmployeeController : ControllerBase
 {
     private ShepherdsPiesDbContext _dbContext;
 
-    public UserProfileController(ShepherdsPiesDbContext context)
+    public EmployeeController(ShepherdsPiesDbContext context)
     {
         _dbContext = context;
     }
@@ -22,16 +22,16 @@ public class UserProfileController : ControllerBase
     // [Authorize]
     public IActionResult Get()
     {
-        return Ok(_dbContext.UserProfiles.ToList());
+        return Ok(_dbContext.Employees.ToList());
     }
 
     [HttpGet("withroles")]
     [Authorize(Roles = "Admin")]
     public IActionResult GetWithRoles()
     {
-        return Ok(_dbContext.UserProfiles
+        return Ok(_dbContext.Employees
         .Include(up => up.IdentityUser)
-        .Select(up => new UserProfile
+        .Select(up => new Employee
         {
             Id = up.Id,
             FirstName = up.FirstName,
@@ -52,7 +52,7 @@ public class UserProfileController : ControllerBase
     public IActionResult GetWithAssignedAndCompletedChores(int id)
     {
 
-        UserProfile up = _dbContext.UserProfiles
+        Employee up = _dbContext.Employees
         .SingleOrDefault(up => up.Id == id);
 
         if (up == null)
