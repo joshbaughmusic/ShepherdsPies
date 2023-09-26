@@ -17,8 +17,8 @@ public class Order
     public decimal TotalCost { get; set; }
     public List<Pizza> Pizzas { get; set; }
     [ForeignKey("EmployeeId")]
-    public List<Employee> Employee { get; set; }
+    public Employee Employee { get; set; }
     [ForeignKey("DriverId")]
-    public List<Employee>? Driver { get; set; }
-    public List<Customer> Customer { get; set; }
+    public Employee? Driver { get; set; }
+    public Customer Customer { get; set; }
 }
