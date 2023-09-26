@@ -46,8 +46,17 @@
   border: black solid 1px;
 }
 
-.container .container-right {
+.pizza-container {
+  border: black solid 1px;
+}
+
+.container .flex-col-spaced {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+}
+
+.container .flex-row-spaced {
+  display: flex;
   justify-content: space-between;
 }

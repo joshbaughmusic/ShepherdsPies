@@ -5,6 +5,7 @@ import Login from './auth/Login';
 import Register from './auth/Register';
 import { OrderList } from './orders/OrderList.js';
 import { OrderDetails } from './orders/OrderDetails.js';
+import { OrderCreate } from './orders/OrderCreate.js';
 
 export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
   return (
@@ -25,7 +26,15 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
               <OrderDetails />
             </AuthorizedRoute>
           }
-        ></Route>
+        />
+        <Route
+          path="orders/create"
+          element={
+            <AuthorizedRoute loggedInUser={loggedInUser}>
+              <OrderCreate />
+            </AuthorizedRoute>
+          }
+        />
 
         <Route
           path="login"

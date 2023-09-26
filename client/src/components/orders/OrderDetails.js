@@ -147,7 +147,7 @@ export const OrderDetails = () => {
               <br />
             </div>
           </div>
-          <div className="container container-right col-2">
+          <div className="container flex-col-spaced col-2">
             <div className="container order-delivery-container">
               <h5>Delivery:</h5>
               {order.delivery ? <p>Yes</p> : <p>No</p>}
@@ -160,15 +160,14 @@ export const OrderDetails = () => {
             <div className="container price-container">
               <h6>Tip:</h6>
               {order.tip ? <p>{`$${order.tip}`}</p> : <p>$0</p>}
-              {
-                order.delivery ? 
+              {order.delivery ? (
                 <>
-                <h6>Delivery Fee</h6>
-                <p>$5</p>
+                  <h6>Delivery Fee</h6>
+                  <p>$5</p>
                 </>
-                :
+              ) : (
                 ''
-              }
+              )}
               <h4>Total:</h4>
               <p>{`$${order.totalCost}`}</p>
             </div>

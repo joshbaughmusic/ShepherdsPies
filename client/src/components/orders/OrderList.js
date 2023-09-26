@@ -29,7 +29,12 @@ export const OrderList = () => {
         <div className="container">
           <div className="title-button-container">
             <h3>All orders:</h3>
-            <Button color="primary">New Order</Button>
+            <Button
+              color="primary"
+              onClick={() => navigate(`orders/create`)}
+            >
+              New Order
+            </Button>
           </div>
           <Table>
             <thead>
@@ -63,7 +68,12 @@ export const OrderList = () => {
                       {o.delivery ? <td>Yes</td> : <td>No</td>}
                       <td>{formattedDate}</td>
                       <td>
-                        <Button color="primary" onClick={() => navigate(`orders/${o.id}`)}>Details</Button>
+                        <Button
+                          color="primary"
+                          onClick={() => navigate(`orders/${o.id}`)}
+                        >
+                          Details
+                        </Button>
                       </td>
                       <td>
                         <Button color="danger">Cancel</Button>
