@@ -41,3 +41,13 @@
   display: flex;
   justify-content: space-between;
 }
+
+.pizza-container {
+  border: black solid 1px;
+}
+
+.container .container-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

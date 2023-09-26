@@ -2,9 +2,11 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { fetchAllOrders } from '../../managers/OrderManager.js';
 import { Button, ButtonGroup, Table } from 'reactstrap';
+import { useNavigate } from 'react-router-dom';
 
 export const OrderList = () => {
   const [orders, setOrders] = useState();
+  const navigate = useNavigate();
 
   const getAllOrders = () => {
     fetchAllOrders().then(setOrders);
@@ -61,7 +63,7 @@ export const OrderList = () => {
                       {o.delivery ? <td>Yes</td> : <td>No</td>}
                       <td>{formattedDate}</td>
                       <td>
-                        <Button color="primary">Details</Button>
+                        <Button color="primary" onClick={() => navigate(`orders/${o.id}`)}>Details</Button>
                       </td>
                       <td>
                         <Button color="danger">Cancel</Button>

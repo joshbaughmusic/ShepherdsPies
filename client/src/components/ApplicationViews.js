@@ -4,7 +4,7 @@ import { AuthorizedRoute } from './auth/AuthorizedRoute';
 import Login from './auth/Login';
 import Register from './auth/Register';
 import { OrderList } from './orders/OrderList.js';
-
+import { OrderDetails } from './orders/OrderDetails.js';
 
 export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
   return (
@@ -18,6 +18,15 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
             </AuthorizedRoute>
           }
         />
+        <Route
+          path="orders/:id"
+          element={
+            <AuthorizedRoute loggedInUser={loggedInUser}>
+              <OrderDetails />
+            </AuthorizedRoute>
+          }
+        ></Route>
+
         <Route
           path="login"
           element={<Login setLoggedInUser={setLoggedInUser} />}

@@ -20,9 +20,31 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
+    // [Authorize]
     public IActionResult GetAllOrders()
     {
-        return Ok(_dbContext.Orders.Include(o => o.Customer));
+        return Ok(_dbContext.Orders.Include(o => o.Customer).Include(o => o.Pizzas).ThenInclude(p => p.Size).Include(o => o.Pizzas).ThenInclude(p => p.PizzaToppings));
+    }
+    
+    [HttpGet("{id}")]
+    // [Authorize]
+    public IActionResult GetSingleOrder(int id)
+    {
+        Order order = _dbContext.Orders
+        .Include(o => o.Customer)
+        .Include(o => o.Employee)
+        .Include(o => o.Driver)
+        .Include(o => o.Pizzas)
+        .ThenInclude(p => p.Size)
+        .Include(o => o.Pizzas)
+        .ThenInclude(p => p.PizzaToppings)
+        .ThenInclude(pt => pt.Topping)
+        .SingleOrDefault(o => o.Id == id);
+
+        if (order == null)
+        {
+            return NotFound();
+        }
+        return Ok(order);
     }
 }
