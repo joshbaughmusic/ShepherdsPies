@@ -26,15 +26,15 @@ export const tryGetLoggedInUser = () => {
   });
 };
 
-export const register = (userProfile) => {
-  userProfile.password = btoa(userProfile.password);
+export const register = (employee) => {
+  employee.password = btoa(employee.password);
   return fetch(_apiUrl + '/register', {
     credentials: 'same-origin',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(userProfile),
+    body: JSON.stringify(employee),
   }).then((res) => {
     if (res.errors) {
       return Promise.resolve(res.errors)

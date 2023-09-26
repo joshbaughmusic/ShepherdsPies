@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ShepherdsPies.Models;
 
-public class UserProfile
+public class Employee
 {
     public int Id { get; set; }
     [Required]
