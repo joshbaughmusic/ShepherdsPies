@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import { fetchEmployees } from '../../managers/EmployeeManager.js';
 import { fetchCustomers } from '../../managers/CustomerManager.js';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { PizzaCreate } from '../pizza/PizzaCreate.js';
+import { fetchNewOrder } from '../../managers/OrderManager.js';
 
 export const OrderCreate = () => {
   const [employees, setEmployees] = useState();
@@ -14,22 +16,22 @@ export const OrderCreate = () => {
     tip: 0,
     //add totalCost = cost in submitHandler
   });
-  const [pizzas, setPizzas] = useState([
-    {
-        orderId: null,
-        sizeId: null,
-
-    }
-  ]);
-  const [cost, setCost] = useState(0)
+  const [orderPizzas, setOrderPizzas] = useState([]);
+  const [cost, setCost] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    let price = newOrder.tip
-    if(newOrder.delivery){
-        price += 5
+    let price = newOrder.tip;
+    if (newOrder.delivery) {
+      price += 5;
     }
-    setCost(price)
-  }, [newOrder])
+    if (orderPizzas.length > 0) {
+      for (const op of orderPizzas) {
+        price += op.price;
+      }
+    }
+    setCost(price);
+  }, [newOrder, orderPizzas]);
 
   const getAllEmployees = () => {
     fetchEmployees().then(setEmployees);
@@ -52,8 +54,14 @@ export const OrderCreate = () => {
 
   const handleCheck = (e) => {
     e.target.checked
-      ? setNewOrder({...newOrder, delivery: true })
-      : setNewOrder({...newOrder, delivery: false });
+      ? setNewOrder({ ...newOrder, delivery: true })
+      : setNewOrder({ ...newOrder, delivery: false });
+  };
+
+  const handleSubmit = (e) => {
+    const copy = { ...newOrder };
+    copy.Pizzas = orderPizzas;
+    fetchNewOrder(copy).then(() => navigate("/"))
   };
 
   if (!employees || !customers) {
@@ -132,16 +140,56 @@ export const OrderCreate = () => {
             <div className="container">
               <div className="container flex-row-spaced">
                 <h4>Pizzas:</h4>
-                <Button color="primary">Add</Button>
+                <PizzaCreate
+                  setOrderPizzas={setOrderPizzas}
+                  orderPizzas={orderPizzas}
+                />
               </div>
               <div className="container pizza-container">
                 <ol>
-                  <li>Pizza 1</li>
-                  <li>Pizza 2</li>
+                  {orderPizzas.map((op, index) => {
+                    return (
+                      <div className="container newPizza-container">
+                        <li key={index}>
+                          <h5>
+                            <strong>Pizza:</strong>
+                          </h5>
+                          <p>
+                            <strong>Size:</strong> {op.size.name}
+                          </p>
+                          <p>
+                            <strong>Cheese:</strong> {op.cheese.name}
+                          </p>
+                          <p>
+                            <strong>Sauce:</strong> {op.sauce.name}
+                          </p>
+                          {op.pizzaToppings.length > 0 ? (
+                            <>
+                              <p>
+                                <strong>Toppings:</strong>
+                              </p>
+                              {op.pizzaToppings.map((t, index) => {
+                                return (
+                                  <ul key={index}>
+                                    <li>{t.topping.name}</li>
+                                  </ul>
+                                );
+                              })}
+                            </>
+                          ) : (
+                            ''
+                          )}
+                          <p>
+                            <strong>Price: ${op.price}</strong>
+                          </p>
+                        </li>
+                      </div>
+                    );
+                  })}
                 </ol>
               </div>
             </div>
-            <Button color="primary">Submit</Button>
+            <Button color="primary" onClick={handleSubmit}>Submit</Button>
           </div>
         </div>
       </div>

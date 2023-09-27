@@ -16,7 +16,7 @@ public class OrderController : ControllerBase
 
     public OrderController(ShepherdsPiesDbContext context)
     {
-       _dbContext = context;
+        _dbContext = context;
     }
 
     [HttpGet]
@@ -25,7 +25,7 @@ public class OrderController : ControllerBase
     {
         return Ok(_dbContext.Orders.Include(o => o.Customer).Include(o => o.Pizzas).ThenInclude(p => p.Size).Include(o => o.Pizzas).ThenInclude(p => p.PizzaToppings));
     }
-    
+
     [HttpGet("{id}")]
     // [Authorize]
     public IActionResult GetSingleOrder(int id)
@@ -46,5 +46,51 @@ public class OrderController : ControllerBase
             return NotFound();
         }
         return Ok(order);
+    }
+
+    [HttpPost]
+    // [Authorize]
+    public IActionResult PostOrder(Order newOrder)
+    {
+        Order orderToSubmit = new Order
+        {
+            EmployeeId = newOrder.EmployeeId,
+            Employee = _dbContext.Employees.SingleOrDefault(e => e.Id == newOrder.EmployeeId),
+            CustomerId = newOrder.CustomerId,
+            Customer = _dbContext.Customers.SingleOrDefault(e => e.Id == newOrder.CustomerId),
+            Date = DateTime.Now,
+            Delivery = newOrder.Delivery,
+            Tip = newOrder.Tip,
+        };
+
+        List<Pizza> newPizzas = new List<Pizza>();
+
+        foreach (Pizza p in newOrder.Pizzas)
+        {
+            Pizza pizza = new Pizza
+            {
+                SizeId = p.Size.Id,
+                Size = _dbContext.Sizes.SingleOrDefault(s => s.Id == p.Size.Id),
+                CheeseId = p.Cheese.Id,
+                SauceId = p.Sauce.Id,
+                PizzaToppings = new List<PizzaTopping>()
+            };
+
+            foreach (PizzaTopping pt in p.PizzaToppings)
+            {
+                pt.Topping = _dbContext.Toppings.SingleOrDefault(t => t.Id == pt.ToppingId);
+
+                pizza.PizzaToppings.Add(pt);
+            }
+
+            newPizzas.Add(pizza);
+        }
+        orderToSubmit.Pizzas = newPizzas;
+
+        _dbContext.Orders.Add(orderToSubmit);
+
+        _dbContext.SaveChanges();
+
+        return Created($"/api/order/{orderToSubmit.Id}", orderToSubmit);
     }
 }

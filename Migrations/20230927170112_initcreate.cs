@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ShepherdsPies.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class initcreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -77,25 +77,6 @@ namespace ShepherdsPies.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Orders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    EmployeeId = table.Column<int>(type: "integer", nullable: false),
-                    DriverId = table.Column<int>(type: "integer", nullable: true),
-                    CustomerId = table.Column<int>(type: "integer", nullable: false),
-                    Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Delivery = table.Column<bool>(type: "boolean", nullable: false),
-                    Tip = table.Column<decimal>(type: "numeric", nullable: true),
-                    TotalCost = table.Column<decimal>(type: "numeric", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -247,30 +228,6 @@ namespace ShepherdsPies.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CustomerOrder",
-                columns: table => new
-                {
-                    CustomerId = table.Column<int>(type: "integer", nullable: false),
-                    OrdersId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CustomerOrder", x => new { x.CustomerId, x.OrdersId });
-                    table.ForeignKey(
-                        name: "FK_CustomerOrder_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CustomerOrder_Orders_OrdersId",
-                        column: x => x.OrdersId,
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
@@ -280,9 +237,7 @@ namespace ShepherdsPies.Migrations
                     LastName = table.Column<string>(type: "text", nullable: false),
                     Address = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
-                    IdentityUserId = table.Column<string>(type: "text", nullable: false),
-                    DriverId = table.Column<int>(type: "integer", nullable: true),
-                    EmployeeId = table.Column<int>(type: "integer", nullable: true)
+                    IdentityUserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -293,16 +248,41 @@ namespace ShepherdsPies.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    EmployeeId = table.Column<int>(type: "integer", nullable: false),
+                    DriverId = table.Column<int>(type: "integer", nullable: true),
+                    CustomerId = table.Column<int>(type: "integer", nullable: false),
+                    Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Delivery = table.Column<bool>(type: "boolean", nullable: false),
+                    Tip = table.Column<decimal>(type: "numeric", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Employees_Orders_DriverId",
+                        name: "FK_Orders_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Orders_Employees_DriverId",
                         column: x => x.DriverId,
-                        principalTable: "Orders",
+                        principalTable: "Employees",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Employees_Orders_EmployeeId",
+                        name: "FK_Orders_Employees_EmployeeId",
                         column: x => x.EmployeeId,
-                        principalTable: "Orders",
-                        principalColumn: "Id");
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -374,12 +354,12 @@ namespace ShepherdsPies.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "c3aaeb97-d2ba-4a53-a521-4eea61e59b35", "3336e556-dc6b-4b0d-9663-716bd9244c27", "Admin", "admin" });
+                values: new object[] { "c3aaeb97-d2ba-4a53-a521-4eea61e59b35", "5bc09cae-f29c-489e-8513-58cf6f206ab3", "Admin", "admin" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f", 0, "5a081e54-3902-4f18-90f8-cf9f8666e9bc", "admina@strator.comx", false, false, null, null, null, "AQAAAAEAACcQAAAAELN7RFWYOHkFBfLTw2NvUl7qvTkVwZ05wnc52dASB3sCwE+SzULbVbvImb3pfERztA==", null, false, "830f6a8f-d5bc-497f-ae5b-e101b8a72df6", false, "Administrator" });
+                values: new object[] { "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f", 0, "8a176b3f-760a-4ff5-b544-cdd8abae6fd1", "admina@strator.comx", false, false, null, null, null, "AQAAAAEAACcQAAAAEPSGEgRO3Mz3o9IS1QY2WMFCl2pRxaLzHWKGPhv2zhX78m41ChTMCHLSfqIbEOTs/A==", null, false, "e331cc1c-6f2f-4004-9c61-26f6ead79aa8", false, "Administrator" });
 
             migrationBuilder.InsertData(
                 table: "Cheeses",
@@ -402,18 +382,6 @@ namespace ShepherdsPies.Migrations
                     { 3, "789 Oak St", "Alice", "Johnson", 3456789012L },
                     { 4, "101 Pine St", "Bob", "Williams", 4567890123L },
                     { 5, "222 Birch St", "Eve", "Brown", 5678901234L }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Orders",
-                columns: new[] { "Id", "CustomerId", "Date", "Delivery", "DriverId", "EmployeeId", "Tip", "TotalCost" },
-                values: new object[,]
-                {
-                    { 1, 1, new DateTime(2023, 8, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 1, 1, 5.00m, 0m },
-                    { 2, 2, new DateTime(2023, 8, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, 1, null, 0m },
-                    { 3, 3, new DateTime(2023, 8, 24, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 1, 1, 3.00m, 0m },
-                    { 4, 4, new DateTime(2023, 9, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, 1, 2.00m, 0m },
-                    { 5, 5, new DateTime(2023, 9, 24, 0, 0, 0, 0, DateTimeKind.Unspecified), true, null, 1, 3.00m, 0m }
                 });
 
             migrationBuilder.InsertData(
@@ -459,8 +427,20 @@ namespace ShepherdsPies.Migrations
 
             migrationBuilder.InsertData(
                 table: "Employees",
-                columns: new[] { "Id", "Address", "DriverId", "Email", "EmployeeId", "FirstName", "IdentityUserId", "LastName" },
-                values: new object[] { 1, "101 Main Street", null, "admina@strator.comx", null, "Admina", "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f", "Strator" });
+                columns: new[] { "Id", "Address", "Email", "FirstName", "IdentityUserId", "LastName" },
+                values: new object[] { 1, "101 Main Street", "admina@strator.comx", "Admina", "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f", "Strator" });
+
+            migrationBuilder.InsertData(
+                table: "Orders",
+                columns: new[] { "Id", "CustomerId", "Date", "Delivery", "DriverId", "EmployeeId", "Tip" },
+                values: new object[,]
+                {
+                    { 1, 1, new DateTime(2023, 8, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 1, 1, 5.00m },
+                    { 2, 2, new DateTime(2023, 8, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, 1, null },
+                    { 3, 3, new DateTime(2023, 8, 24, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 1, 1, 3.00m },
+                    { 4, 4, new DateTime(2023, 9, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, 1, 2.00m },
+                    { 5, 5, new DateTime(2023, 9, 24, 0, 0, 0, 0, DateTimeKind.Unspecified), true, null, 1, 3.00m }
+                });
 
             migrationBuilder.InsertData(
                 table: "Pizzas",
@@ -533,24 +513,24 @@ namespace ShepherdsPies.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerOrder_OrdersId",
-                table: "CustomerOrder",
-                column: "OrdersId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Employees_DriverId",
-                table: "Employees",
-                column: "DriverId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Employees_EmployeeId",
-                table: "Employees",
-                column: "EmployeeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Employees_IdentityUserId",
                 table: "Employees",
                 column: "IdentityUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_CustomerId",
+                table: "Orders",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_DriverId",
+                table: "Orders",
+                column: "DriverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_EmployeeId",
+                table: "Orders",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pizzas_CheeseId",
@@ -601,22 +581,10 @@ namespace ShepherdsPies.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CustomerOrder");
-
-            migrationBuilder.DropTable(
-                name: "Employees");
-
-            migrationBuilder.DropTable(
                 name: "PizzaToppings");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Customers");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Pizzas");
@@ -635,6 +603,15 @@ namespace ShepherdsPies.Migrations
 
             migrationBuilder.DropTable(
                 name: "Sizes");
+
+            migrationBuilder.DropTable(
+                name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "Employees");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

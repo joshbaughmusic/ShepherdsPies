@@ -26,7 +26,10 @@ public class Order
             {
                 total += DeliverySurcharge;
             }
-                total += Tip;
+            if (Tip != null)
+            {
+                total += (decimal)Tip;
+            }
             return total;
         }
     }   

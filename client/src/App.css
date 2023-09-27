@@ -46,10 +46,6 @@
   border: black solid 1px;
 }
 
-.pizza-container {
-  border: black solid 1px;
-}
-
 .container .flex-col-spaced {
   display: flex;
   flex-direction: column;
@@ -60,3 +56,4 @@
   display: flex;
   justify-content: space-between;
 }
+

@@ -7,3 +7,11 @@ export const fetchAllOrders = () => {
 export const fetchSingleOrder = (id) => {
     return fetch(`${_apiUrl}/${id}`).then(res => res.json())
 }
+
+export const fetchNewOrder = (orderWithPizzas) => {
+    return fetch(_apiUrl, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(orderWithPizzas)
+    }).then(res => res.json())
+}
