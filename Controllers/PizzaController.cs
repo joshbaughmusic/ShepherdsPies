@@ -19,6 +19,12 @@ public class PizzaController : ControllerBase
         _dbContext = context;
     }
 
+    [HttpGet("{id}/")]
+    // [Authorize]
+    public IActionResult GetSinglePizza(int id)
+    {
+        return Ok(_dbContext.Pizzas.Include(p => p.Size).Include(p => p.Cheese).Include(p => p.Sauce).Include(p => p.PizzaToppings).ThenInclude(pt => pt.Topping).SingleOrDefault(p => p.Id == id));
+    }
 
     [HttpGet("sizes")]
     // [Authorize]
@@ -45,5 +51,37 @@ public class PizzaController : ControllerBase
         return Ok(_dbContext.Toppings);
     }
 
+    [HttpPut("{orderId}/{pizzaId}/update")]
+    // [Authorize]
+    public IActionResult UpdatePizza(int pizzaId, Pizza updatedPizza)
+    {
+        Pizza pizzaToUpdate = _dbContext.Pizzas.SingleOrDefault(p => p.Id == pizzaId);
+
+        if (pizzaToUpdate == null)
+        {
+            return NotFound();
+        }
+
+        pizzaToUpdate.SizeId = updatedPizza.SizeId;
+        pizzaToUpdate.Size = _dbContext.Sizes.SingleOrDefault(x => x.Id == updatedPizza.SizeId);
+        pizzaToUpdate.CheeseId = updatedPizza.CheeseId;
+        pizzaToUpdate.Cheese = _dbContext.Cheeses.SingleOrDefault(x => x.Id == updatedPizza.CheeseId);
+        pizzaToUpdate.SauceId = updatedPizza.SauceId;
+        pizzaToUpdate.Sauce = _dbContext.Sauces.SingleOrDefault(x => x.Id == updatedPizza.SauceId);
+        foreach (PizzaTopping pt in updatedPizza.PizzaToppings)
+        {
+            pt.Topping = _dbContext.Toppings.SingleOrDefault(t => t.Id == pt.ToppingId);
+        }
+
+        List<PizzaTopping> pizzaToppingsToRemove = _dbContext.PizzaToppings.Where(pt => pt.PizzaId == pizzaId).ToList();
+
+        _dbContext.PizzaToppings.RemoveRange(pizzaToppingsToRemove);
+
+        pizzaToUpdate.PizzaToppings = updatedPizza.PizzaToppings;
+
+        _dbContext.SaveChanges();
+
+        return NoContent();
+    }
 
 }
