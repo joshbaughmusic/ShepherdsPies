@@ -112,4 +112,19 @@ public class PizzaController : ControllerBase
         return Created($"api/pizza/{orderId}/{newPizzaToSubmit.Id}", newPizzaToSubmit);
     }
 
+    [HttpDelete("{orderId}/{pizzaId}")]
+    // [Authorize]
+    public IActionResult RemovePizza(int pizzaId)
+    {
+        Pizza pizzaToRemove = _dbContext.Pizzas.SingleOrDefault(p => p.Id == pizzaId);
+
+        if (pizzaToRemove == null)
+        {
+            return NotFound();
+        }
+        _dbContext.Pizzas.Remove(pizzaToRemove);
+        _dbContext.SaveChanges();
+        return NoContent();
+    }
+
 }

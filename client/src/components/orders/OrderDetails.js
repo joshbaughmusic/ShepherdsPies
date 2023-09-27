@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
 import { PizzaUpdate } from '../pizza/PizzaUpdate.js';
 import { PizzaAdd } from '../pizza/PizzaAdd.js';
+import { fetchRemovePizza } from '../../managers/PizzaManager.js';
 
 export const OrderDetails = () => {
   const [order, setOrder] = useState();
@@ -29,6 +30,10 @@ export const OrderDetails = () => {
       .padStart(2, '0')}/${year}`;
 
     return formattedDate;
+  };
+
+  const handleCancel = (e) => {
+    fetchRemovePizza(id, parseInt(e.target.value)).then(() => getSingleOrder());
   };
 
   if (!order) {
@@ -134,7 +139,13 @@ export const OrderDetails = () => {
                             />
                           </td>
                           <td>
-                            <Button color="danger">Remove</Button>
+                            <Button
+                              color="danger"
+                              value={p.id}
+                              onClick={handleCancel}
+                            >
+                              Remove
+                            </Button>
                           </td>
                         </tr>
                       </React.Fragment>
@@ -142,7 +153,10 @@ export const OrderDetails = () => {
                   })}
                 </tbody>
               </Table>
-              <PizzaAdd getSingleOrder={getSingleOrder} orderId={id} />
+              <PizzaAdd
+                getSingleOrder={getSingleOrder}
+                orderId={id}
+              />
               <br />
               <br />
             </div>

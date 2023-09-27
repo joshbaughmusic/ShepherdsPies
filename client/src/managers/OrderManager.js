@@ -15,3 +15,9 @@ export const fetchNewOrder = (orderWithPizzas) => {
         body: JSON.stringify(orderWithPizzas)
     }).then(res => res.json())
 }
+
+export const fetchCancelOrder = (id) => {
+  return fetch(`${_apiUrl}/${id}`, {
+    method: "DELETE"
+  })
+}

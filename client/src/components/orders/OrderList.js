@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { fetchAllOrders } from '../../managers/OrderManager.js';
+import { fetchAllOrders, fetchCancelOrder } from '../../managers/OrderManager.js';
 import { Button, ButtonGroup, Table } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,6 +15,10 @@ export const OrderList = () => {
   useEffect(() => {
     getAllOrders();
   }, []);
+
+  const handleCancel = (e) => {
+    fetchCancelOrder(parseInt(e.target.value)).then(() => getAllOrders())
+  }
 
   if (!orders) {
     return null;
@@ -76,7 +80,13 @@ export const OrderList = () => {
                         </Button>
                       </td>
                       <td>
-                        <Button color="danger">Cancel</Button>
+                        <Button
+                          color="danger"
+                          value={o.id}
+                          onClick={handleCancel}
+                        >
+                          Cancel
+                        </Button>
                       </td>
                     </tr>
                   </React.Fragment>

@@ -32,3 +32,9 @@ export const fetchAddPizza = (orderId, pizza) => {
     body: JSON.stringify(pizza)
   })
 }
+
+export const fetchRemovePizza = (orderId, pizzaId) => {
+  return fetch(`${_apiUrl}/${orderId}/${pizzaId}`, {
+    method: "DELETE"
+  })
+}
