@@ -22,7 +22,7 @@ export const PizzaCreate = ({ orderPizzas, setOrderPizzas }) => {
     size: null,
     cheese: null,
     sauce: null,
-    toppings: []
+    pizzaToppings: []
     // set price = totalPizzaPrice on create
   });
   const [totalPizzaPrice, setTotalPizzaPrice] = useState(0);
@@ -49,7 +49,7 @@ export const PizzaCreate = ({ orderPizzas, setOrderPizzas }) => {
     if (newPizza.size) {
       price += parseInt(newPizza.size.price);
     }
-    price += newPizza.toppings.length * 0.5;
+    price += newPizza.pizzaToppings.length * 0.5;
     setTotalPizzaPrice(price);
   }, [newPizza]);
 
@@ -66,30 +66,41 @@ export const PizzaCreate = ({ orderPizzas, setOrderPizzas }) => {
     const parsedObj = JSON.parse(e.target.value);
 
     if (isChecked) {
-      let newArr = [...newPizza.toppings, parsedObj];
+      let newArr = [...newPizza.pizzaToppings, parsedObj];
       setNewPizza({
         ...newPizza,
-        toppings: newArr,
+        pizzaToppings: newArr,
       });
     } else {
       setNewPizza({
         ...newPizza,
-        toppings: newPizza.toppings.filter((t) => t.id !== parsedObj.id),
+        pizzaToppings: newPizza.pizzaToppings.filter(
+          (t) => t.id !== parsedObj.id
+        ),
       });
     }
   };
 
   const handleSubmit = () => {
+    let convertedPizzaToppings = []
+    for (const t of newPizza.pizzaToppings){
+      let newPT = {
+        toppingId: t.id,
+        topping: t
+      }
+      convertedPizzaToppings.push(newPT)
+    }
     let newPizzaWithPrice = {
         ...newPizza,
-        price: totalPizzaPrice
+        price: totalPizzaPrice,
+        pizzaToppings: convertedPizzaToppings
     }
     setOrderPizzas([...orderPizzas, newPizzaWithPrice]);
     setNewPizza({
       size: null,
       cheese: null,
       sauce: null,
-      toppings: []
+      pizzaToppings: [],
     });
     toggle();
   };
@@ -188,7 +199,9 @@ export const PizzaCreate = ({ orderPizzas, setOrderPizzas }) => {
                     type="checkbox"
                     value={JSON.stringify(t)}
                     onChange={handleCheck}
-                    checked={!!newPizza.toppings.find((top) => top.id == t.id)}
+                    checked={
+                      !!newPizza.pizzaToppings.find((top) => top.id == t.id)
+                    }
                   />
                   <Label
                     check

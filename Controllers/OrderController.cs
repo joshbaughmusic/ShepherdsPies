@@ -48,46 +48,49 @@ public class OrderController : ControllerBase
         return Ok(order);
     }
 
-    // [HttpPost("create")]
-    // // [Authorize]
-    // public IActionResult PostOrder(Order newOrder)
-    // {
-    //     Order orderToSubmit = new Order
-    //     {
-    //         EmployeeId = newOrder.EmployeeId,
-    //         CustomerId = newOrder.CustomerId,
-    //         Date = DateTime.Now,
-    //         Delivery = newOrder.Delivery,
-    //         Tip = newOrder.Tip,
-    //     };
+    [HttpPost]
+    // [Authorize]
+    public IActionResult PostOrder(Order newOrder)
+    {
+        Order orderToSubmit = new Order
+        {
+            EmployeeId = newOrder.EmployeeId,
+            Employee = _dbContext.Employees.SingleOrDefault(e => e.Id == newOrder.EmployeeId),
+            CustomerId = newOrder.CustomerId,
+            Customer = _dbContext.Customers.SingleOrDefault(e => e.Id == newOrder.CustomerId),
+            Date = DateTime.Now,
+            Delivery = newOrder.Delivery,
+            Tip = newOrder.Tip,
+        };
 
-    //     List<Pizza> newPizzas = new List<Pizza>();
+        List<Pizza> newPizzas = new List<Pizza>();
 
-    //     foreach (Pizza p in newOrder.Pizzas)
-    //     {
-    //         Pizza pizza = new Pizza
-    //         {
-    //             SizeId = p.SizeId,
-    //             CheeseId = p.CheeseId,
-    //             SauceId = p.SauceId
-    //         };
+        foreach (Pizza p in newOrder.Pizzas)
+        {
+            Pizza pizza = new Pizza
+            {
+                SizeId = p.Size.Id,
+                Size = _dbContext.Sizes.SingleOrDefault(s => s.Id == p.Size.Id),
+                CheeseId = p.Cheese.Id,
+                SauceId = p.Sauce.Id,
+                PizzaToppings = new List<PizzaTopping>()
+            };
 
-    //         List<Topping> newToppings = new List<Topping>();
+            foreach (PizzaTopping pt in p.PizzaToppings)
+            {
+                pt.Topping = _dbContext.Toppings.SingleOrDefault(t => t.Id == pt.ToppingId);
 
-    //         foreach (Topping t in p.Toppings)
-    //         {
-    //             Topping foundTopping = _dbContext.Toppings.Single(t2 => t.Id == t2.Id);
-    //             newToppings.Add(foundTopping);
-    //         }
-    //         pizza.Toppings = newToppings;
-    //         newPizzas.Add(pizza);
-    //     }
-    //     orderToSubmit.Pizzas = newPizzas;
+                pizza.PizzaToppings.Add(pt);
+            }
 
-    //     _dbContext.Orders.Add(orderToSubmit);
+            newPizzas.Add(pizza);
+        }
+        orderToSubmit.Pizzas = newPizzas;
 
-    //     _dbContext.SaveChanges();
+        _dbContext.Orders.Add(orderToSubmit);
 
-    //     return Created($"/api/order/{orderToSubmit.Id}", orderToSubmit);
-    // }
+        _dbContext.SaveChanges();
+
+        return Created($"/api/order/{orderToSubmit.Id}", orderToSubmit);
+    }
 }

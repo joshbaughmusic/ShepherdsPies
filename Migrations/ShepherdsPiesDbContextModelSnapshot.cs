@@ -22,21 +22,6 @@ namespace ShepherdsPies.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CustomerOrder", b =>
-                {
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("OrdersId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("CustomerId", "OrdersId");
-
-                    b.HasIndex("OrdersId");
-
-                    b.ToTable("CustomerOrder");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -66,7 +51,7 @@ namespace ShepherdsPies.Migrations
                         new
                         {
                             Id = "c3aaeb97-d2ba-4a53-a521-4eea61e59b35",
-                            ConcurrencyStamp = "3336e556-dc6b-4b0d-9663-716bd9244c27",
+                            ConcurrencyStamp = "5bc09cae-f29c-489e-8513-58cf6f206ab3",
                             Name = "Admin",
                             NormalizedName = "admin"
                         });
@@ -165,13 +150,13 @@ namespace ShepherdsPies.Migrations
                         {
                             Id = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5a081e54-3902-4f18-90f8-cf9f8666e9bc",
+                            ConcurrencyStamp = "8a176b3f-760a-4ff5-b544-cdd8abae6fd1",
                             Email = "admina@strator.comx",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAELN7RFWYOHkFBfLTw2NvUl7qvTkVwZ05wnc52dASB3sCwE+SzULbVbvImb3pfERztA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPSGEgRO3Mz3o9IS1QY2WMFCl2pRxaLzHWKGPhv2zhX78m41ChTMCHLSfqIbEOTs/A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "830f6a8f-d5bc-497f-ae5b-e101b8a72df6",
+                            SecurityStamp = "e331cc1c-6f2f-4004-9c61-26f6ead79aa8",
                             TwoFactorEnabled = false,
                             UserName = "Administrator"
                         });
@@ -393,15 +378,9 @@ namespace ShepherdsPies.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("DriverId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("integer");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -416,10 +395,6 @@ namespace ShepherdsPies.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DriverId");
-
-                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("IdentityUserId");
 
@@ -463,10 +438,13 @@ namespace ShepherdsPies.Migrations
                     b.Property<decimal?>("Tip")
                         .HasColumnType("numeric");
 
-                    b.Property<decimal>("TotalCost")
-                        .HasColumnType("numeric");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("DriverId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Orders");
 
@@ -479,8 +457,7 @@ namespace ShepherdsPies.Migrations
                             Delivery = true,
                             DriverId = 1,
                             EmployeeId = 1,
-                            Tip = 5.00m,
-                            TotalCost = 0m
+                            Tip = 5.00m
                         },
                         new
                         {
@@ -488,8 +465,7 @@ namespace ShepherdsPies.Migrations
                             CustomerId = 2,
                             Date = new DateTime(2023, 8, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Delivery = false,
-                            EmployeeId = 1,
-                            TotalCost = 0m
+                            EmployeeId = 1
                         },
                         new
                         {
@@ -499,8 +475,7 @@ namespace ShepherdsPies.Migrations
                             Delivery = true,
                             DriverId = 1,
                             EmployeeId = 1,
-                            Tip = 3.00m,
-                            TotalCost = 0m
+                            Tip = 3.00m
                         },
                         new
                         {
@@ -509,8 +484,7 @@ namespace ShepherdsPies.Migrations
                             Date = new DateTime(2023, 9, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Delivery = false,
                             EmployeeId = 1,
-                            Tip = 2.00m,
-                            TotalCost = 0m
+                            Tip = 2.00m
                         },
                         new
                         {
@@ -519,8 +493,7 @@ namespace ShepherdsPies.Migrations
                             Date = new DateTime(2023, 9, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Delivery = true,
                             EmployeeId = 1,
-                            Tip = 3.00m,
-                            TotalCost = 0m
+                            Tip = 3.00m
                         });
                 });
 
@@ -868,21 +841,6 @@ namespace ShepherdsPies.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CustomerOrder", b =>
-                {
-                    b.HasOne("ShepherdsPies.Models.Customer", null)
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ShepherdsPies.Models.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -936,14 +894,6 @@ namespace ShepherdsPies.Migrations
 
             modelBuilder.Entity("ShepherdsPies.Models.Employee", b =>
                 {
-                    b.HasOne("ShepherdsPies.Models.Order", null)
-                        .WithMany("Driver")
-                        .HasForeignKey("DriverId");
-
-                    b.HasOne("ShepherdsPies.Models.Order", null)
-                        .WithMany("Employee")
-                        .HasForeignKey("EmployeeId");
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("IdentityUserId")
@@ -951,6 +901,31 @@ namespace ShepherdsPies.Migrations
                         .IsRequired();
 
                     b.Navigation("IdentityUser");
+                });
+
+            modelBuilder.Entity("ShepherdsPies.Models.Order", b =>
+                {
+                    b.HasOne("ShepherdsPies.Models.Customer", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShepherdsPies.Models.Employee", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverId");
+
+                    b.HasOne("ShepherdsPies.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Driver");
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("ShepherdsPies.Models.Pizza", b =>
@@ -1005,12 +980,13 @@ namespace ShepherdsPies.Migrations
                     b.Navigation("Topping");
                 });
 
+            modelBuilder.Entity("ShepherdsPies.Models.Customer", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("ShepherdsPies.Models.Order", b =>
                 {
-                    b.Navigation("Driver");
-
-                    b.Navigation("Employee");
-
                     b.Navigation("Pizzas");
                 });
 

@@ -9,7 +9,7 @@ export const fetchSingleOrder = (id) => {
 }
 
 export const fetchNewOrder = (orderWithPizzas) => {
-    return fetch(`${_apiUrl}/create`, {
+    return fetch(_apiUrl, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(orderWithPizzas)

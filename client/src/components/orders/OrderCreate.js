@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import { fetchEmployees } from '../../managers/EmployeeManager.js';
 import { fetchCustomers } from '../../managers/CustomerManager.js';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PizzaCreate } from '../pizza/PizzaCreate.js';
 import { fetchNewOrder } from '../../managers/OrderManager.js';
 
@@ -18,6 +18,7 @@ export const OrderCreate = () => {
   });
   const [orderPizzas, setOrderPizzas] = useState([]);
   const [cost, setCost] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let price = newOrder.tip;
@@ -60,8 +61,7 @@ export const OrderCreate = () => {
   const handleSubmit = (e) => {
     const copy = { ...newOrder };
     copy.Pizzas = orderPizzas;
-    console.log(copy)
-    fetchNewOrder(copy)
+    fetchNewOrder(copy).then(() => navigate("/"))
   };
 
   if (!employees || !customers) {
@@ -163,15 +163,15 @@ export const OrderCreate = () => {
                           <p>
                             <strong>Sauce:</strong> {op.sauce.name}
                           </p>
-                          {op.toppings.length > 0 ? (
+                          {op.pizzaToppings.length > 0 ? (
                             <>
                               <p>
                                 <strong>Toppings:</strong>
                               </p>
-                              {op.toppings.map((t, index) => {
+                              {op.pizzaToppings.map((t, index) => {
                                 return (
-                                  <ul>
-                                    <li>{t.name}</li>
+                                  <ul key={index}>
+                                    <li>{t.topping.name}</li>
                                   </ul>
                                 );
                               })}
