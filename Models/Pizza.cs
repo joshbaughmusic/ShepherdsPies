@@ -12,7 +12,7 @@ public class Pizza
             decimal total = 0.00m;
             
                 total += Size.Price;
-                if (PizzaToppings.Count > 0)
+                if (PizzaToppings != null && PizzaToppings.Count > 0)
                 {
                     total += PizzaToppings.Count * 0.50m;
                 }
