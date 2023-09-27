@@ -7,9 +7,9 @@ public class Pizza
     public int Id { get; set; }
     [Required]
     public int OrderId { get; set; }
-    public decimal TotalCost { get
+    public decimal? TotalCost { get
         {
-            decimal total = 0.00m;
+            decimal? total = 0.00m;
             
                 total += Size.Price;
                 if (PizzaToppings.Count > 0)

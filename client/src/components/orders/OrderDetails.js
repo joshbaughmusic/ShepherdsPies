@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { fetchSingleOrder } from '../../managers/OrderManager.js';
 import { useParams } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
+import { PizzaUpdate } from '../pizza/PizzaUpdate.js';
+import { PizzaAdd } from '../pizza/PizzaAdd.js';
 
 export const OrderDetails = () => {
   const [order, setOrder] = useState();
@@ -126,12 +128,10 @@ export const OrderDetails = () => {
                           <td>{p.pizzaToppings.length}</td>
                           <td>{`$${p.totalCost}`}</td>
                           <td>
-                            <Button
-                              color="primary"
-                              onClick={() => {}}
-                            >
-                              Update
-                            </Button>
+                            <PizzaUpdate
+                              id={p.id}
+                              getSingleOrder={getSingleOrder}
+                            />
                           </td>
                           <td>
                             <Button color="danger">Remove</Button>
@@ -142,7 +142,7 @@ export const OrderDetails = () => {
                   })}
                 </tbody>
               </Table>
-              <Button color="primary">Add Pizza</Button>
+              <PizzaAdd getSingleOrder={getSingleOrder} orderId={id} />
               <br />
               <br />
             </div>
