@@ -84,4 +84,32 @@ public class PizzaController : ControllerBase
         return NoContent();
     }
 
+    [HttpPost("{orderId}/add")]
+    // [Authorize]
+    public IActionResult AddPizza(int orderId, Pizza newPizza)
+    {
+        Pizza newPizzaToSubmit = new Pizza()
+        {
+            OrderId = orderId,
+            SizeId = newPizza.SizeId,
+            Size = _dbContext.Sizes.SingleOrDefault(x => x.Id == newPizza.SizeId),
+            CheeseId = newPizza.CheeseId,
+            Cheese = _dbContext.Cheeses.SingleOrDefault(x => x.Id == newPizza.CheeseId),
+            SauceId = newPizza.SauceId,
+            Sauce = _dbContext.Sauces.SingleOrDefault(x => x.Id == newPizza.SauceId)
+        };
+        foreach (PizzaTopping pt in newPizza.PizzaToppings)
+        {
+            pt.Topping = _dbContext.Toppings.SingleOrDefault(t => t.Id == pt.ToppingId);
+        }
+
+        newPizzaToSubmit.PizzaToppings = newPizza.PizzaToppings;
+
+        _dbContext.Pizzas.Add(newPizzaToSubmit);
+
+        _dbContext.SaveChanges();
+
+        return Created($"api/pizza/{orderId}/{newPizzaToSubmit.Id}", newPizzaToSubmit);
+    }
+
 }

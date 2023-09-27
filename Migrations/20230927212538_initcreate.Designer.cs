@@ -12,7 +12,7 @@ using ShepherdsPies.Data;
 namespace ShepherdsPies.Migrations
 {
     [DbContext(typeof(ShepherdsPiesDbContext))]
-    [Migration("20230927204831_initcreate")]
+    [Migration("20230927212538_initcreate")]
     partial class initcreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,7 +53,7 @@ namespace ShepherdsPies.Migrations
                         new
                         {
                             Id = "c3aaeb97-d2ba-4a53-a521-4eea61e59b35",
-                            ConcurrencyStamp = "2cd74268-cc00-4be8-b48e-b6b3073668e0",
+                            ConcurrencyStamp = "3d3c06bc-a32f-45f2-ac4e-ae1dcb208711",
                             Name = "Admin",
                             NormalizedName = "admin"
                         });
@@ -152,13 +152,13 @@ namespace ShepherdsPies.Migrations
                         {
                             Id = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3e7704d0-904e-448d-ae43-a32f2388bc30",
+                            ConcurrencyStamp = "d2bda489-98c8-49c6-aa15-c295f10d3536",
                             Email = "admina@strator.comx",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAECc6v20KOj3Qy947iccMjSUPXHOmzYKOZdzLNMDePhqU6/pJP0fuKkE5C4N0cN3yKg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIJ49N0wtADZy+r4zWT2BpkXxV0W7Hc353acxubttaPj9jZXJY1hMJ23iRssbjkKNA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4eb5787d-c186-41b1-8126-8960dfeac644",
+                            SecurityStamp = "6fc02d48-87e1-4fe2-b1ba-5d03bf4794fb",
                             TwoFactorEnabled = false,
                             UserName = "Administrator"
                         });

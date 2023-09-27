@@ -24,3 +24,11 @@ export const fetchUpdatePizza = (pizzaId, orderId, pizza) => {
     body: JSON.stringify(pizza)
   })
 }
+
+export const fetchAddPizza = (orderId, pizza) => {
+  return fetch(`${_apiUrl}/${orderId}/add`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(pizza)
+  })
+}

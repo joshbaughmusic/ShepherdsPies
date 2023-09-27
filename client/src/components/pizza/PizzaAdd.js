@@ -4,7 +4,6 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Form,
   FormGroup,
   Label,
@@ -12,25 +11,19 @@ import {
   Spinner,
 } from 'reactstrap';
 import {
+  fetchAddPizza,
   fetchCheeses,
   fetchSauces,
-  fetchSinglePizza,
   fetchSizes,
   fetchToppings,
-  fetchUpdatePizza,
 } from '../../managers/PizzaManager.js';
 
-export const PizzaUpdate = ({ id, getSingleOrder }) => {
-  const [pizzaToUpdate, setPizzaToUpdate] = useState({
-    orderId: null,
-    sizeId: null,
+export const PizzaAdd = ({ getSingleOrder, orderId }) => {
+  const [newPizza, setNewPizza] = useState({
     size: null,
-    cheeseId: null,
     cheese: null,
-    sauceId: null,
     sauce: null,
     pizzaToppings: [],
-    // set price = totalPizzaPrice on create
   });
   const [totalPizzaPrice, setTotalPizzaPrice] = useState(0);
   const [sizes, setSizes] = useState();
@@ -47,33 +40,28 @@ export const PizzaUpdate = ({ id, getSingleOrder }) => {
     fetchToppings().then(setToppings);
   };
 
-  const getSinglePizza = () => {
-    fetchSinglePizza(id).then(setPizzaToUpdate);
-  };
-
   useEffect(() => {
-    getSinglePizza();
     getAllPizzaOptions();
   }, []);
 
   useEffect(() => {
     let price = 0;
-    if (pizzaToUpdate.sizeId) {
-      if (pizzaToUpdate.sizeId == 1) {
+    if (newPizza.sizeId) {
+      if (newPizza.sizeId == 1) {
         price += 10;
-      } else if (pizzaToUpdate.sizeId == 2) {
+      } else if (newPizza.sizeId == 2) {
         price += 12;
       } else {
         price += 15;
       }
     }
-    price += pizzaToUpdate.pizzaToppings.length * 0.5;
+    price += newPizza.pizzaToppings.length * 0.5;
     setTotalPizzaPrice(price);
-  }, [pizzaToUpdate]);
+  }, [newPizza]);
 
   const handleChange = (e) => {
-    setPizzaToUpdate({
-      ...pizzaToUpdate,
+    setNewPizza({
+      ...newPizza,
       [e.target.name]: e.target.value,
     });
   };
@@ -82,18 +70,18 @@ export const PizzaUpdate = ({ id, getSingleOrder }) => {
     const isChecked = e.target.checked;
     if (isChecked) {
       let newPizzaToppingObj = {
-        pizzaId: id,
         toppingId: t.id,
+        topping: toppings.find((top) => top.id === t.id),
       };
-      let newArr = [...pizzaToUpdate.pizzaToppings, newPizzaToppingObj];
-      setPizzaToUpdate({
-        ...pizzaToUpdate,
+      let newArr = [...newPizza.pizzaToppings, newPizzaToppingObj];
+      setNewPizza({
+        ...newPizza,
         pizzaToppings: newArr,
       });
     } else {
-      setPizzaToUpdate({
-        ...pizzaToUpdate,
-        pizzaToppings: pizzaToUpdate.pizzaToppings.filter(
+      setNewPizza({
+        ...newPizza,
+        pizzaToppings: newPizza.pizzaToppings.filter(
           (pt) => pt.toppingId !== t.id
         ),
       });
@@ -101,12 +89,28 @@ export const PizzaUpdate = ({ id, getSingleOrder }) => {
   };
 
   const handleSubmit = () => {
-    fetchUpdatePizza(id, pizzaToUpdate.orderId, pizzaToUpdate).then(() => getSingleOrder());
+    let newPizzaToSubmit = { ...newPizza };
+    newPizzaToSubmit.orderId = orderId;
+    newPizzaToSubmit.size = sizes.find((x) => x.id == newPizzaToSubmit.sizeId);
+    newPizzaToSubmit.cheese = cheeses.find(
+      (x) => x.id == newPizzaToSubmit.cheeseId
+    );
+    newPizzaToSubmit.sauce = sauces.find(
+      (x) => x.id == newPizzaToSubmit.sauceId
+    );
+
+    fetchAddPizza(orderId, newPizzaToSubmit).then(() => getSingleOrder());
+    setNewPizza({
+      size: null,
+      cheese: null,
+      sauce: null,
+      pizzaToppings: [],
+    });
     toggle();
   };
 
-  if (!sizes || !cheeses || !sauces || !toppings || !pizzaToUpdate) {
-    return <Spinner />;
+  if (!sizes || !cheeses || !sauces || !toppings || !newPizza) {
+    return <Spinner/>;
   }
   return (
     <>
@@ -114,13 +118,13 @@ export const PizzaUpdate = ({ id, getSingleOrder }) => {
         color="primary"
         onClick={toggle}
       >
-        Update
+        Add Pizza
       </Button>
       <Modal
         isOpen={modal}
         toggle={toggle}
       >
-        <ModalHeader toggle={toggle}>Edit Pizza</ModalHeader>
+        <ModalHeader toggle={toggle}>Add New Pizza</ModalHeader>
         <ModalBody>
           <Form>
             <FormGroup>
@@ -128,7 +132,7 @@ export const PizzaUpdate = ({ id, getSingleOrder }) => {
               <Input
                 name="sizeId"
                 type="select"
-                value={pizzaToUpdate.sizeId}
+                value={newPizza.sizeId}
                 onChange={handleChange}
               >
                 <option value={null}>Select a size</option>
@@ -152,7 +156,7 @@ export const PizzaUpdate = ({ id, getSingleOrder }) => {
                 name="cheeseId"
                 type="select"
                 onChange={handleChange}
-                value={pizzaToUpdate.cheeseId}
+                value={newPizza.cheeseId}
               >
                 <option value={null}>Select a cheese</option>
                 {cheeses.map((c, index) => {
@@ -175,7 +179,7 @@ export const PizzaUpdate = ({ id, getSingleOrder }) => {
                 name="sauceId"
                 type="select"
                 onChange={handleChange}
-                value={pizzaToUpdate.sauceId}
+                value={newPizza.sauceId}
               >
                 <option value={null}>Select a sauce</option>
                 {sauces.map((s, index) => {
@@ -202,7 +206,7 @@ export const PizzaUpdate = ({ id, getSingleOrder }) => {
                     type="checkbox"
                     onChange={(e) => handleCheck(e, t)}
                     checked={
-                      !!pizzaToUpdate.pizzaToppings.find(
+                      !!newPizza.pizzaToppings.find(
                         (pt) => parseInt(pt.toppingId) == parseInt(t.id)
                       )
                     }

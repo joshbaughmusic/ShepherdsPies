@@ -3,6 +3,7 @@ import { fetchSingleOrder } from '../../managers/OrderManager.js';
 import { useParams } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
 import { PizzaUpdate } from '../pizza/PizzaUpdate.js';
+import { PizzaAdd } from '../pizza/PizzaAdd.js';
 
 export const OrderDetails = () => {
   const [order, setOrder] = useState();
@@ -141,7 +142,7 @@ export const OrderDetails = () => {
                   })}
                 </tbody>
               </Table>
-              <Button color="primary">Add Pizza</Button>
+              <PizzaAdd getSingleOrder={getSingleOrder} orderId={id} />
               <br />
               <br />
             </div>
