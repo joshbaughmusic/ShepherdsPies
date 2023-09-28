@@ -5,6 +5,7 @@ import { fetchCustomers } from '../../managers/CustomerManager.js';
 import { Link, useNavigate } from 'react-router-dom';
 import { PizzaCreate } from '../pizza/PizzaCreate.js';
 import { fetchNewOrder } from '../../managers/OrderManager.js';
+import { CustomerCreate } from '../customers/CustomerCreate.js';
 
 export const OrderCreate = () => {
   const [employees, setEmployees] = useState();
@@ -102,8 +103,9 @@ export const OrderCreate = () => {
                   name="customerId"
                   type="select"
                   onChange={handleChange}
+                  value={newOrder.customerId}
                 >
-                  <option value={null}>Select an customer</option>
+                  <option value={null}>Select a customer</option>
                   {customers.map((c, index) => {
                     return (
                       <option
@@ -113,7 +115,11 @@ export const OrderCreate = () => {
                     );
                   })}
                 </Input>
-                <Link>Add new customer</Link>
+                <CustomerCreate
+                  setNewOrder={setNewOrder}
+                  newOrder={newOrder}
+                  getAllCustomers={getAllCustomers}
+                />
               </FormGroup>
               <br />
               <FormGroup>
@@ -189,7 +195,12 @@ export const OrderCreate = () => {
                 </ol>
               </div>
             </div>
-            <Button color="primary" onClick={handleSubmit}>Submit</Button>
+            <Button
+              color="primary"
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
           </div>
         </div>
       </div>
