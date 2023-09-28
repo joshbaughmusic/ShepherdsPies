@@ -21,3 +21,9 @@ export const fetchCancelOrder = (id) => {
     method: "DELETE"
   })
 }
+
+export const fetchAssignDriverToOrder = (orderId, employeeId) => {
+  return fetch(`${_apiUrl}/${orderId}/assign/${employeeId}`, {
+    method: "POST"
+  });
+}

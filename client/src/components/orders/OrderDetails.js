@@ -5,6 +5,7 @@ import { Button, Table } from 'reactstrap';
 import { PizzaUpdate } from '../pizza/PizzaUpdate.js';
 import { PizzaAdd } from '../pizza/PizzaAdd.js';
 import { fetchRemovePizza } from '../../managers/PizzaManager.js';
+import { OrderAssignDriver } from './OrderAssignDriver.js';
 
 export const OrderDetails = () => {
   const [order, setOrder] = useState();
@@ -166,7 +167,7 @@ export const OrderDetails = () => {
               <h5>Delivery:</h5>
               {order.delivery ? <p>Yes</p> : <p>No</p>}
               {order.delivery && !order.driver ? (
-                <Button color="primary">Assign Driver</Button>
+                <OrderAssignDriver orderId={id} getSingleOrder={getSingleOrder}/>
               ) : (
                 ''
               )}

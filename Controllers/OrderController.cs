@@ -109,5 +109,23 @@ public class OrderController : ControllerBase
         return NoContent();
     }
 
+    [HttpPost("{orderId}/assign/{employeeId}")]
+    // [Authorize]
+    public IActionResult AssignDriver(int orderId, int employeeId)
+    {
+        Order orderToUpdate = _dbContext.Orders.SingleOrDefault(o => o.Id == orderId);
+        Employee employeeToAssign = _dbContext.Employees.SingleOrDefault(e => e.Id == employeeId);
+        if (orderToUpdate == null || employeeToAssign == null)
+        {
+            return NotFound();
+        }
+        orderToUpdate.DriverId = employeeId;
+        orderToUpdate.Driver = employeeToAssign;
+
+        _dbContext.SaveChanges();
+
+        return NoContent();
+    }
+
 }
 
