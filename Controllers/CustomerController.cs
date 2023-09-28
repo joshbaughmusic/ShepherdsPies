@@ -26,5 +26,12 @@ public class CustomerController : ControllerBase
         return Ok(_dbContext.Customers);
     }
 
-    
+    [HttpPost]
+    //[Authorize]
+    public IActionResult CreateCustomer(Customer newCustomer)
+    {
+        _dbContext.Customers.Add(newCustomer);
+        _dbContext.SaveChanges();
+        return Created($"api/customer/{newCustomer.Id}", newCustomer);
+    }
 }
